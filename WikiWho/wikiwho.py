@@ -116,7 +116,7 @@ class Wikiwho:
                     # Some revisions don't have contributor.
                     contributor_name = ''
                     contributor_id = ''
-                editor = contributor_id
+                editor = contributor_name
                 editor = str(editor) if editor != 0 else '0|{}'.format(contributor_name)
                 self.revision_curr.editor = editor
 

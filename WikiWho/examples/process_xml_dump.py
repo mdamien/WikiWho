@@ -63,3 +63,33 @@ if __name__ == "__main__":
         else:
             print(text, end="")
     print()
+
+    print('######################')
+    print('REVISIONS STATS')
+
+    # stats by revision
+    from collections import Counter
+
+    c = Counter()
+    for token in iter_rev_tokens(last_rev):
+        author = wikiwho_obj.revisions[token.origin_rev_id].editor
+        c['%d %s' % (token.origin_rev_id, author)] += 1
+
+    total = sum(c.values())
+    for rev, n in c.most_common():
+        print(rev, n, round(n/total*100, 2), sep='\t')
+
+    print('######################')
+    print('AUTHOR STATS')
+
+    # stats by authors
+    from collections import Counter
+
+    c = Counter()
+    for token in iter_rev_tokens(last_rev):
+        author = wikiwho_obj.revisions[token.origin_rev_id].editor
+        c[author] += 1
+
+    total = sum(c.values())
+    for rev, n in c.most_common():
+        print(rev, n, round(n/total*100, 2), sep='\t')
