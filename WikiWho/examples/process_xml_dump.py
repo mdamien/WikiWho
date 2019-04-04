@@ -27,3 +27,39 @@ def process_xml_dump(xml_file_path):
         wikiwho.analyse_article_from_xml_dump(page)
         break  # process only first page
     return wikiwho
+
+def iter_rev_tokens_and_text(last_rev):
+    curr_pos = 0
+    ltext = last_rev.text.lower()
+    for token in iter_rev_tokens(last_rev):
+        next_pos = ltext.index(token.value, curr_pos)
+        if next_pos > curr_pos:
+            yield None, last_rev.text[curr_pos:next_pos]
+        yield token, last_rev.text[next_pos:next_pos + len(token.value)]
+        curr_pos = next_pos + len(token.value)
+
+if __name__ == "__main__":
+    import sys
+
+    from WikiWho.utils import iter_rev_tokens
+
+    from termcolor import colored
+
+    path = sys.argv[1]
+    wikiwho_obj = process_xml_dump(path)
+
+    colors = ('cyan', 'yellow', 'red', 'blue', 'green', 'magenta')
+    color = 0
+    prev_rev_id = None
+    last_rev = wikiwho_obj.revisions[wikiwho_obj.ordered_revisions[-1]]
+
+    for token, text in iter_rev_tokens_and_text(last_rev):
+        if token:
+            # token.origin_rev_id
+            color_index = token.origin_rev_id % len(colors)
+            print(colored(text, colors[(color_index+1)%len(colors)], 'on_' + colors[color_index]), end="")
+
+            prev_rev_id = token.origin_rev_id
+        else:
+            print(text, end="")
+    print()
