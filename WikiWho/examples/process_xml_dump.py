@@ -57,7 +57,6 @@ if __name__ == "__main__":
 
     for token, text in iter_rev_tokens_and_text(last_rev):
         if token:
-            # token.origin_rev_id
             color_index = token.origin_rev_id % len(colors)
             print(colored(text, colors[(color_index+1)%len(colors)], 'on_' + colors[color_index]), end="")
         else:
@@ -74,7 +73,6 @@ if __name__ == "__main__":
     last_rev = wikiwho_obj.revisions[wikiwho_obj.ordered_revisions[-1]]
     for token, text in iter_rev_tokens_and_text(last_rev):
         if token:
-            # token.origin_rev_id
             color_index = token.origin_rev_id % len(colors)
             author = wikiwho_obj.revisions[token.origin_rev_id].editor
             if prev_rev_id != token.origin_rev_id:

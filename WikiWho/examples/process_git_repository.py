@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 
 from lys import L, render, raw
 
@@ -18,19 +19,22 @@ HEADER = """<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.10/" xmlns:x
 
 FOOTER = """</mediawiki>"""
 
+
 if __name__ == '__main__':
-	repo = git.Repo()
 	path = sys.argv[1]
+	repo = git.Repo(path, search_parent_directories=True)
+	git_root = repo.git.rev_parse("--show-toplevel")
+	file_in_repo = str(Path(path)).replace(git_root + '/', '')
 
 	revisions = []
 
 	for i, commit in enumerate(reversed(list(repo.iter_commits(paths=path)))):
-		filecontents = (commit.tree / path).data_stream.read().decode('utf-8')
+		filecontents = (commit.tree / file_in_repo).data_stream.read().decode('utf-8')
 		revision = L.revision / (
 			L.id / str(i),
 			L.timestamp / '2008-01-26T13:36:54Z',
 			L.contributor / (
-				L.username / str(commit.author),
+				L.username / (str(commit.author) + ' ' + str(commit)),
 				L.id / str(hash(commit.author))
 			),
 			L.comment / commit.message,
