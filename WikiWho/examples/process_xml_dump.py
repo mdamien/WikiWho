@@ -48,9 +48,11 @@ if __name__ == "__main__":
     path = sys.argv[1]
     wikiwho_obj = process_xml_dump(path)
 
+    print('##################')
+    print('QUICK REVISIONS VIZ')
+
     colors = ('cyan', 'yellow', 'red', 'blue', 'green', 'magenta')
     color = 0
-    prev_rev_id = None
     last_rev = wikiwho_obj.revisions[wikiwho_obj.ordered_revisions[-1]]
 
     for token, text in iter_rev_tokens_and_text(last_rev):
@@ -58,10 +60,31 @@ if __name__ == "__main__":
             # token.origin_rev_id
             color_index = token.origin_rev_id % len(colors)
             print(colored(text, colors[(color_index+1)%len(colors)], 'on_' + colors[color_index]), end="")
-
-            prev_rev_id = token.origin_rev_id
         else:
             print(text, end="")
+    print()
+
+
+    print('##################')
+    print('WORD BY WORD AUTHOR')
+
+    colors = ('cyan', 'yellow', 'red', 'blue', 'green', 'magenta')
+    color = 0
+    prev_rev_id = None
+    last_rev = wikiwho_obj.revisions[wikiwho_obj.ordered_revisions[-1]]
+    for token, text in iter_rev_tokens_and_text(last_rev):
+        if token:
+            # token.origin_rev_id
+            color_index = token.origin_rev_id % len(colors)
+            author = wikiwho_obj.revisions[token.origin_rev_id].editor
+            if prev_rev_id != token.origin_rev_id:
+                print()
+                print(colored(text, colors[(color_index+1)%len(colors)], 'on_' + colors[color_index]),
+                    '\t->', author, ' ((', token.origin_rev_id)
+            else:
+                print(colored(text, colors[(color_index+1)%len(colors)], 'on_' + colors[color_index]) + ' ', end="")
+
+            prev_rev_id = token.origin_rev_id
     print()
 
     print('######################')
