@@ -87,6 +87,24 @@ if __name__ == "__main__":
             prev_rev_id = token.origin_rev_id
     print()
 
+
+    print('##################')
+    print('QUICK AUTHOR VIZ')
+
+    colors = ('cyan', 'yellow', 'red', 'blue', 'green', 'magenta')
+    color = 0
+    last_rev = wikiwho_obj.revisions[wikiwho_obj.ordered_revisions[-1]]
+
+    for token, text in iter_rev_tokens_and_text(last_rev):
+        if token:
+            author = wikiwho_obj.revisions[token.origin_rev_id].editor
+            color_index = hash(author) % len(colors)
+            print(colored(text, colors[(color_index+1)%len(colors)], 'on_' + colors[color_index]), end="")
+        else:
+            print(text, end="")
+    print()
+
+
     print('######################')
     print('REVISIONS STATS')
 
