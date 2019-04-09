@@ -90,6 +90,7 @@ class Revision(object):
         self.ordered_paragraphs = []  # Ordered list of paragraph hashes.
         self.length = 0  # Content length (bytes).
         self.original_adds = 0  # Number of tokens originally added in this revision.
+        self.text = '' # Original text
 
     def __repr__(self):
         return str(id(self))
