@@ -102,6 +102,7 @@ class Wikiwho:
                 self.revision_curr.id = rev_id
                 self.revision_curr.length = text_len
                 self.revision_curr.timestamp = revision.timestamp.long_format()
+                self.revision_curr.text = text
 
                 # Get editor information
                 if revision.user:
